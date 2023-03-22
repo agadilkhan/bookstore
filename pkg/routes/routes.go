@@ -1,14 +1,22 @@
 package routes
 
-import "github.com/gorilla/mux"
+import (
+	"github.com/agadilkhan/simple-rest-api/pkg/controllers"
+	"github.com/gorilla/mux"
+	"net/http"
+)
 
-func Routes() *mux.Router {
+type Router struct {
+	C *controllers.Controller
+}
+
+func (router *Router) Routes() {
 	r := mux.NewRouter()
-	r.HandleFunc("/books", GetBooks).Methods("GET")
-	r.HandleFunc("/books/{id}", GetBookByID).Methods("GET")
-	r.HandleFunc("/books", CreateBook).Methods("POST")
-	r.HandleFunc("/books/{id}", UpdateBook).Methods("PUT")
-	r.HandleFunc("books/{id}", DeleteBook).Methods("DELETE")
-
-	return r
+	r.HandleFunc("/books", router.C.GetBooks).Methods("GET")
+	r.HandleFunc("/books/{id:[0-9]}", router.C.GetBookByID).Methods("GET")
+	r.HandleFunc("/books/{title}", router.C.GetBookByTitle).Methods("GET")
+	r.HandleFunc("/books", router.C.CreateBook).Methods("POST")
+	r.HandleFunc("/books/{id}", router.C.DeleteBook).Methods("DELETE")
+	r.HandleFunc("/books/{id}", router.C.UpdateBook).Methods("PUT")
+	http.ListenAndServe(":8000", r)
 }

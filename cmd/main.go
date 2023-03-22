@@ -1,7 +1,15 @@
 package main
 
-import "github.com/agadilkhan/rest-api/store"
+import (
+	"github.com/agadilkhan/simple-rest-api/pkg/controllers"
+	"github.com/agadilkhan/simple-rest-api/pkg/routes"
+	"github.com/agadilkhan/simple-rest-api/pkg/store"
+)
 
 func main() {
-	store Store
+	var store store.Store
+	store.Connection()
+	var controller controllers.Controller = controllers.Controller{DB: &store}
+	r := routes.Router{C: &controller}
+	r.Routes()
 }
