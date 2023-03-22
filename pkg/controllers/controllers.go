@@ -17,7 +17,7 @@ func (c *Controller) GetBooks(w http.ResponseWriter, r *http.Request) {
 	books, err := c.DB.GetBooks()
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
-		panic(err)
+		return
 	}
 	w.Header().Set("content-type", "application/json")
 	w.WriteHeader(http.StatusOK)
@@ -28,12 +28,12 @@ func (c *Controller) CreateBook(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&book)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		panic(err)
+		return
 	}
 	err = c.DB.CreateBook(&book)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		panic(err)
+		return
 	}
 	w.Header().Set("content-type", "application/json")
 	w.WriteHeader(http.StatusOK)
@@ -43,8 +43,8 @@ func (c *Controller) GetBookByID(w http.ResponseWriter, r *http.Request) {
 	id, _ := strconv.Atoi(vars["id"])
 	book, err := c.DB.GetBookByID(id)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		panic(err)
+		w.WriteHeader(http.StatusNotFound)
+		return
 	}
 	w.Header().Set("content-type", "application/json")
 	w.WriteHeader(http.StatusOK)
@@ -56,7 +56,7 @@ func (c *Controller) DeleteBook(w http.ResponseWriter, r *http.Request) {
 	err := c.DB.DeleteBook(id)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		panic(err)
+		return
 	}
 	w.Header().Set("content-type", "application/json")
 	w.WriteHeader(http.StatusOK)
@@ -68,12 +68,12 @@ func (c *Controller) UpdateBook(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&updatedBook)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		panic(err)
+		return
 	}
 	err = c.DB.UpdateBook(id, &updatedBook)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		panic(err)
+		return
 	}
 	w.Header().Set("content-type", "application/json")
 	w.WriteHeader(http.StatusOK)
@@ -84,7 +84,7 @@ func (c *Controller) GetBookByTitle(w http.ResponseWriter, r *http.Request) {
 	book, err := c.DB.SearchBook(title)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
-		panic(err)
+		return
 	}
 	w.Header().Set("content-type", "application/json")
 	w.WriteHeader(http.StatusOK)
