@@ -90,3 +90,15 @@ func (c *Controller) GetBookByTitle(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(book)
 }
+func (c *Controller) GetBooksByOrder(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	order, _ := vars["order"]
+	books, err := c.DB.OrderBy(order)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	w.Header().Set("content-type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(books)
+}

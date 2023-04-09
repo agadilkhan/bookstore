@@ -15,6 +15,7 @@ func (router *Router) Routes() {
 	r.HandleFunc("/books", router.C.GetBooks).Methods("GET")
 	r.HandleFunc("/books/{id:[0-9]}", router.C.GetBookByID).Methods("GET")
 	r.HandleFunc("/books/{title}", router.C.GetBookByTitle).Methods("GET")
+	r.HandleFunc("/booksByOrder/{order}", router.C.GetBooksByOrder).Methods("GET")
 	r.HandleFunc("/books", router.C.CreateBook).Methods("POST")
 	r.HandleFunc("/books/{id}", router.C.DeleteBook).Methods("DELETE")
 	r.HandleFunc("/books/{id}", router.C.UpdateBook).Methods("PUT")

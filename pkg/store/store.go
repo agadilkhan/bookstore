@@ -11,7 +11,7 @@ type Store struct {
 }
 
 func (s *Store) Connection() {
-	dsn := "user=postgres password=Alfarabi2004 dbname=go_db sslmode=disable"
+	dsn := "host=db port=5432 user=postgres password=Alfarabi2004 dbname=go_db sslmode=disable"
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic(err)
@@ -53,6 +53,11 @@ func (s *Store) UpdateBook(id int, updatedBook *models.Book) error {
 }
 func (s *Store) SearchBook(title string) (*models.Book, error) {
 	var book models.Book
-	result := s.DB.First(&book, "title = ?", title)
+	result := s.DB.Where("title LIKE ?", title + "%").First(&book)
 	return &book, result.Error
+}
+func (s *Store) OrderBy(order string) (*[]models.Book, error) {
+	var books []models.Book
+	result := s.DB.Order("cost " + order).Find(&books)
+	return &books, result.Error
 }
